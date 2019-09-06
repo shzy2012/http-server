@@ -18,7 +18,7 @@ git clone https://github.com/shzy2012/http-server.git
 
 cd http-server
 
-# 执行安装
+# mac,linux下执行安装
 ./install/install.sh
 ```
 
