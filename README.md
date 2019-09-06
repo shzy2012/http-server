@@ -12,8 +12,17 @@ http-server -p=8080
 -p: 端口,默认8080
 ```
 
+安装
+```bash
+git clone https://github.com/shzy2012/http-server.git
 
-example
+cd http-server
+
+# 执行安装
+./install/install.sh
+```
+
+示例
 ```bash
 ➜ http-server
 Starting up http-server, serving ./
