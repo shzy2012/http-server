@@ -20,7 +20,11 @@ cd http-server
 
 # mac,linux下执行安装
 ./install/install.sh
+
+# brew 安装
+brew install shzy2012/tap/http-server
 ```
+
 
 示例
 ```bash
