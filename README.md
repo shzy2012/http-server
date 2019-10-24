@@ -1,8 +1,13 @@
-### http-server
 
-用途: 为website 提供http server 功能
+<p align="center">
+	<img src="https://github.com/shzy2012/static/blob/master/toolbox.png?raw=true" width="120" height="120">
+</p>
 
-优点: 简单,高性能
+<h1 align="center">http-server</h1>
+
+用途: 为静态资源提供http-server功能
+
+优点: 简单
 
 使用: 进入website目录,执行http-server即可
 ```bash
@@ -14,13 +19,6 @@ http-server -p=8080
 
 安装
 ```bash
-git clone https://github.com/shzy2012/http-server.git
-
-cd http-server
-
-# mac,linux下执行安装
-./install/install.sh
-
 # brew 安装
 brew install shzy2012/tap/http-server
 ```
