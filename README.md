@@ -5,6 +5,18 @@
 
 <h1 align="center">http-server</h1>
 
+
+<p align="center">
+
+[![build status][travis-image]][travis-url] [![GitHub license](https://img.shields.io/github/license/laiye-ai/wulai-openapi-sdk-golang?style=social)](https://travis-ci.org/shzy2012/common/blob/master/LICENSE)
+
+
+[travis-image]: https://travis-ci.org/shzy2012/http-server.svg?branch=master
+
+[travis-url]: https://travis-ci.org/shzy2012/http-server
+
+</p>
+
 用途: 为静态资源提供http-server功能
 
 优点: 简单
