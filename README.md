@@ -21,13 +21,6 @@
 
 优点: 简单
 
-使用: 进入website目录,执行http-server即可
-```bash
-http-server -p=8080
-
-参数解释：
--p: 端口,默认8080
-```
 
 安装
 ```bash
@@ -35,6 +28,10 @@ http-server -p=8080
 brew install shzy2012/tap/http-server
 ```
 
+使用: 进入website目录，执行http-server即可
+```bash
+http-server -p=8080
+```
 
 示例
 ```bash
