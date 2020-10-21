@@ -83,6 +83,8 @@ func main() {
 
 		fs := http.FileServer(http.Dir("./"))
 		http.Handle("/", loggingHandler(fs))
+
+		//TODO 检测端口是否被暂用
 		log.Println(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 	}()
 

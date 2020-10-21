@@ -26,7 +26,11 @@
 ```bash
 # brew 安装
 brew install shzy2012/tap/http-server
+
+# linux 源码安装
+env GOOS=linux GOARCH=amd64 go build -o http-server http-server.go
 ```
+
 
 使用: 进入website目录，执行http-server即可
 ```bash
