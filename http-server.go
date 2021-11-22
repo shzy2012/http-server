@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"runtime"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -31,7 +32,7 @@ func localIP() []net.IP {
 					ip = v.IP
 				}
 
-				if ip.To4() != nil {
+				if ip.To4() != nil && !strings.Contains(ip.String(), "169.254") {
 					ips = append(ips, ip)
 				}
 			}
