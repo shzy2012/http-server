@@ -8,7 +8,11 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"runtime"
+	"strconv"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -29,7 +33,7 @@ func localIP() []net.IP {
 					ip = v.IP
 				}
 
-				if ip.To4() != nil {
+				if ip.To4() != nil && !strings.Contains(ip.String(), "169.254") {
 					ips = append(ips, ip)
 				}
 			}
@@ -60,10 +64,50 @@ func loggingHandler(h http.Handler) http.Handler {
 	})
 }
 
+func openbrowser(url string) {
+	var err error
+
+	switch runtime.GOOS {
+	case "linux":
+		err = exec.Command("xdg-open", url).Start()
+	case "windows":
+		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		err = exec.Command("open", url).Start()
+	default:
+		err = fmt.Errorf("unsupported platform")
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func portMustBeAvailable(port int) {
+	p := strconv.Itoa(port)
+	ln, err := net.Listen("tcp", ":"+p)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Can't listen on port %q. Please use other port\n", p)
+		os.Exit(1)
+	}
+
+	err = ln.Close()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Couldn't stop listening on port %q: %s\n", p, err)
+		os.Exit(1)
+	}
+
+	// fmt.Printf("TCP Port %q is available\n", p)
+}
+
 func main() {
 	var port int
+	var open bool
 	flag.IntVar(&port, "p", 8080, "http 端口号  -p=8080")
+	flag.BoolVar(&open, "o", false, "Open browser automatically")
 	flag.Parse()
+
+	portMustBeAvailable(port)
 
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool)
@@ -72,19 +116,28 @@ func main() {
 	_, cancel := context.WithCancel(context.Background())
 	go func() {
 
-		ips := ""
-		for _, ip := range localIP() {
-			ips = ips + fmt.Sprintf("        http://%s:%v\n", ip, port)
+		ips := localIP()
+		ipString := ""
+		for _, ip := range ips {
+			ipString = ipString + fmt.Sprintf("        http://%s:%v\n", ip, port)
 		}
-		fmt.Println("Starting up http-server, serving ./")
+		path, err := os.Getwd()
+		if err != nil {
+			log.Println(err)
+		}
+
+		fmt.Println("Starting up http-server, serving dir", path)
 		fmt.Println("Available on:")
-		fmt.Printf("%s", ips)
+		fmt.Printf("%s", ipString)
 		fmt.Println("Hit CTRL-C to stop the server")
 
-		fs := http.FileServer(http.Dir("./"))
+		fs := http.FileServer(http.Dir(path))
 		http.Handle("/", loggingHandler(fs))
 
-		//TODO 检测端口是否被暂用
+		if open && len(ips) > 0 {
+			openbrowser(fmt.Sprintf("http://%s:%v", ips[1].String(), port))
+		}
+
 		log.Println(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 	}()
 
